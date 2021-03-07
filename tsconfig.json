@@ -22,5 +22,11 @@
   },
   "include": [
     "src"
-  ]
+  ],
+  "rules": {
+    "indent": [
+      true,
+      4
+    ]
+  }
 }
