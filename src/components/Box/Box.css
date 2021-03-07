@@ -1,0 +1,18 @@
+.box {
+    font-size: 20px;
+    font-weight: bold;
+    text-transform: uppercase;
+    width: 40px;
+    height: 40px;
+    overflow: hidden;
+    text-align: center;
+    line-height: 40px;
+    vertical-align: middle;
+    border: 1px solid #999;
+    color: #555;
+    float: left;
+    cursor: pointer
+}
+.box:hover {
+    background: #eee;
+}
