@@ -29,7 +29,7 @@ class Body extends React.Component {
           {/* Input Board Dimension (X,Y) */}
 
           {/* Board */}
-          <Board/>
+          <Board size={5}/>
         </div>
       </div>
     );
