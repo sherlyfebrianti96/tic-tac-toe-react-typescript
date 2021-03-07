@@ -27,19 +27,20 @@ class Board extends React.Component<BoardProps> {
     }
 
     this.setState({'boardDimension': boardDimension});
-    console.log('this.state.boardDimension : ', this.state.boardDimension);
   }
 
   render() {
     return (
       <div className="board">
       {
-        this.state.boardDimension.map((board: Array<string>) => {
-          const boxes = board.map(() => {
-            return <Box/>;
+        this.state.boardDimension.map((board: Array<string>, boardIndex: number) => {
+          const boardKey = 'board' + boardIndex;
+          const boxes = board.map((box, boxIndex) => {
+            const boxKey = boardKey + '-box' + boxIndex;
+            return <Box key={boxKey}/>;
           })
 
-          boxes.push(<br className="clear"/>);
+          boxes.push(<br className="clear" key={boardKey}/>);
 
           return boxes;
         })
