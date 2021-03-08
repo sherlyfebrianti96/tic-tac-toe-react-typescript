@@ -12,6 +12,7 @@ class Board extends React.Component<BoardProps> {
     boardDimension: [],
     turn: PlayerEnum.playerOne,
     selectBox: this.selectBox,
+    winner: null,
   };
 
   componentDidMount() {
@@ -43,6 +44,11 @@ class Board extends React.Component<BoardProps> {
   }
 
   selectBox(x: number, y: number) {
+    // Disable selection after the winner has been defined
+    if (this.state.winner) {
+      return;
+    }
+
     const boardDimension = this.state.boardDimension.map((board: Array<string>, boardIndex: number) => {
       let boxes = board;
       if (boardIndex === x) {
@@ -57,7 +63,37 @@ class Board extends React.Component<BoardProps> {
       return boxes;
     });
     this.setState({'boardDimension': boardDimension});
-    this.changeTurn();
+    setTimeout(() => this.defineWinner(), 100);
+  }
+
+  defineWinner() {
+    switch(true) {
+      case this.checkWinnerHorizontal():
+        console.log('winner found');
+        break;
+      default:
+        console.log('change turn');
+        this.changeTurn();
+        break;
+    }
+  }
+
+  checkWinnerHorizontal(): boolean {
+    let winnerFound = false;
+    const isOwnByCurrentPlayer = (currentValue: PlayerEnum) => currentValue === this.state.turn;
+    this.state.boardDimension.forEach((horizontalBoxes: PlayerEnum[]) => {
+      const hBoxesOwnedByCurrentPlayer = horizontalBoxes.every(isOwnByCurrentPlayer);
+      if (hBoxesOwnedByCurrentPlayer) {
+        winnerFound = true;
+        this.setWinner();
+      }
+    });
+
+    return winnerFound;
+  }
+
+  setWinner() {
+    this.setState({'winner': this.state.turn});
   }
 
   render() {
