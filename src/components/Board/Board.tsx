@@ -67,33 +67,69 @@ class Board extends React.Component<BoardProps> {
   }
 
   defineWinner() {
-    switch(true) {
-      case this.checkWinnerHorizontal():
-        console.log('winner found');
-        break;
-      default:
-        console.log('change turn');
-        this.changeTurn();
-        break;
-    }
+    this.checkWinner();
+    this.changeTurn();
   }
 
-  checkWinnerHorizontal(): boolean {
-    let winnerFound = false;
-    const isOwnByCurrentPlayer = (currentValue: PlayerEnum) => currentValue === this.state.turn;
-    this.state.boardDimension.forEach((horizontalBoxes: PlayerEnum[]) => {
-      const hBoxesOwnedByCurrentPlayer = horizontalBoxes.every(isOwnByCurrentPlayer);
-      if (hBoxesOwnedByCurrentPlayer) {
-        winnerFound = true;
-        this.setWinner();
-      }
-    });
+  checkWinner() {
+    const dimension = this.state.boardDimension;
+    let countZl = 0;
+    let countZr = 0;
+    for (let i = 0; i < this.props.size; i++) {
+      let countX = 1;
+      let countY = 1;
+      for (let j = 0; j < this.props.size; j++) {
+        // Escape last box since it doesn't have comparator
+        if ((i >= this.props.size -1) || (j >= this.props.size -1)) {
+          continue;
+        }
 
-    return winnerFound;
+        // Defining winner horizontally
+        const currentXBoxOwnByCurrentPlayer = (dimension[i][j] === this.state.turn);
+        const nextXBoxOwnByCurrentPlayer = (dimension[i][j+1] === this.state.turn);
+        if (currentXBoxOwnByCurrentPlayer && nextXBoxOwnByCurrentPlayer) {
+          countX++;
+        }
+
+        // Defining winner vertically
+        const currentYBoxOwnByCurrentPlayer = (dimension[j][i] === this.state.turn);
+        const nextYBoxOwnByCurrentPlayer = (dimension[j+1][i] === this.state.turn);
+        if (currentYBoxOwnByCurrentPlayer && nextYBoxOwnByCurrentPlayer) {
+          countY++;
+        }
+      }
+
+      // Defining winner left-diagonally
+      const currentZlBoxOwnByCurrentPlayer = (dimension[i][i] === this.state.turn);
+      const nextZlBoxOwnByCurrentPlayer = (dimension[i][i] === this.state.turn);
+      if (currentZlBoxOwnByCurrentPlayer && nextZlBoxOwnByCurrentPlayer) {
+        countZl++;
+      }
+
+      // Defining winner right-diagonally
+      const lastIndex = this.props.size - 1;
+      const currentZrBoxOwnByCurrentPlayer = (dimension[lastIndex - i][i] === this.state.turn);
+      const nextZrBoxOwnByCurrentPlayer = (dimension[lastIndex - i][i] === this.state.turn);
+      if (currentZrBoxOwnByCurrentPlayer && nextZrBoxOwnByCurrentPlayer) {
+        countZr++;
+      }
+
+      // Checking winner has been found
+      const winHorizontally = (countX === this.props.size);
+      const winVertically = (countY === this.props.size);
+      const winLDiagonally = (countZl === this.props.size);
+      const winRDiagonally = (countZr === this.props.size);
+      if (winHorizontally || winVertically || winLDiagonally || winRDiagonally) {
+        console.log('winner found!');
+        this.setWinner();
+        return;
+      }
+    }
   }
 
   setWinner() {
     this.setState({'winner': this.state.turn});
+    console.log('winner : ', this.state.turn);
   }
 
   render() {
