@@ -115,16 +115,16 @@ class Board extends React.Component<BoardProps> {
       }
 
       // Checking winner has been found
-      const winHorizontally = (countX === this.props.size);
-      const winVertically = (countY === this.props.size);
-      const winLDiagonally = (countZl === this.props.size);
-      const winRDiagonally = (countZr === this.props.size);
-      if (winHorizontally || winVertically || winLDiagonally || winRDiagonally) {
+      if (this.checkAxisWin(countX) || this.checkAxisWin(countY) || this.checkAxisWin(countZl) || this.checkAxisWin(countZr)) {
         console.log('winner found!');
         this.setWinner();
         return;
       }
     }
+  }
+
+  checkAxisWin(countAxis: number) {
+    return (countAxis === this.props.size);
   }
 
   setWinner() {
